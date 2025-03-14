@@ -1,9 +1,3 @@
-// owner ObjectId users
-//   videos ObjectId[] videos
-//   name string
-//   description string
-//   createdAt Date
-//   updatedAt Date
 
 import mongoose, { Schema } from "mongoose";
 
