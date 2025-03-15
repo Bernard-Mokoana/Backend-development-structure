@@ -22,10 +22,12 @@ app.use(cookieParser()); // Parse cookies from incoming requests
 import healthcheckRouter from "./routes/healthcheck.routes.js"; // Health check route
 import userRouter from "./routes/user.routes.js"; // User-related routes
 import { errorHandler } from "./middleware/error.middlewares.js"; // Global error handler
+import tweetRouter from "./routes/tweet.routes.js";
 
 // Define routes
 app.use("/api/v1/healthcheck", healthcheckRouter); // Health check endpoint
 app.use("/api/v1/users", userRouter); // User-related endpoints
+app.use("/api/v1/tweets", tweetRouter)
 
 // Global error handler middleware
 app.use(errorHandler);
