@@ -23,11 +23,13 @@ import healthcheckRouter from "./routes/healthcheck.routes.js"; // Health check 
 import userRouter from "./routes/user.routes.js"; // User-related routes
 import { errorHandler } from "./middleware/error.middlewares.js"; // Global error handler
 import tweetRouter from "./routes/tweet.routes.js";
+import videoRouter from "./routes/video.routes.js";
 
 // Define routes
 app.use("/api/v1/healthcheck", healthcheckRouter); // Health check endpoint
 app.use("/api/v1/users", userRouter); // User-related endpoints
 app.use("/api/v1/tweets", tweetRouter)
+app.use("/api/v1/videos", videoRouter);
 
 // Global error handler middleware
 app.use(errorHandler);
