@@ -46,37 +46,45 @@ const publishAVideo = asyncHandler(async(req, res) => {
    
     try {
         const { title, description } = req.body;
-        
+        const userId = req.user._id;
+
         if(!title || !description) {     
             throw new ApiError(400, "Title and description are required");
            }
 
-           const videoFile = req.files?.videoFile[0]?.path;
-           const thumbnailFile = req.files?.thumbnail[0]?.path;
 
-           if(!videoFile || !thumbnailFile) {
-            throw new ApiError(400, "Video and thumbnail are required");
+           console.log("Uploaded files:", req.files);
+
+           if(!req.files || !req.files.videoFile || !req.files.thumbnail) {
+            throw new ApiError(400, "video and thumbnail are required")
            }
+
+           const videoFile = req.files.videoFile[0].path;
+        // req.files?.videoFile[0]?.path;
+           const thumbnailFile =  req.files.thumbnail[0].path;
+        //    req.files?.thumbnail[0]?.path;
+
 
            const videoUploadResponse = await uploadOnCloudinary(videoFile);
            if(!videoUploadResponse?.url) {
-            throw new ApiError(500, "Failed to upload video");
+            throw new ApiError(500, "Failed to upload video to cloudinary");
            }
 
            const thumbnailUploadResponse = await uploadOnCloudinary(thumbnailFile);
            if(!thumbnailUploadResponse?.url) {
-            throw new ApiError(500, "Failed to uplaod thumbnail");
+            throw new ApiError(500, "Failed to uplaod thumbnail to cloudinary");
            }
 
            const video = await Videos.create({
             title,
             description,
             videoFile: videoUploadResponse.url,
-            thumbnailFile: thumbnailUploadResponse,
+            thumbnailFile: thumbnailUploadResponse.url,
             duration: videoUploadResponse.duration,
-            owner: req.User._id,
+            owner: userId,
            });
 
+           console.log(req.user);
            return res
            .status(201)
            .json(new ApiResponse(201, video, "video published successfully"));

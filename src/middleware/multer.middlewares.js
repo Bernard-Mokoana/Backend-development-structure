@@ -2,8 +2,8 @@ import multer from "multer";
 
 // Configure storage for uploaded files
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./public/temp"); // Ensure this directory exists
+  destination: function (req, files, cb) {
+    cb(null, "./public/temp"); 
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
