@@ -48,7 +48,7 @@ const getUserchannelSubscribers = asyncHandler(async (req, res) => {
 
         const subscribers = subscriptions.map((sub) => sub.subscriber);
 
-        return res.status(200).json(new ApiResponse(200, subscribersr, "Subscribed successfully"));
+        return res.status(200).json(new ApiResponse(200, subscribers, "Subscribers fetched successfully"));
     } catch (error) {
         throw new ApiError(500, error?.message || "Error while fetching subscribers");
     }
