@@ -43,8 +43,6 @@ const getAllVideos = asyncHandler(async (req, res) => {
 })
 
 const publishAVideo = asyncHandler(async(req, res) => {
-   
-    try {
         const { title, description } = req.body;
         const userId = req.user._id;
 
@@ -52,18 +50,12 @@ const publishAVideo = asyncHandler(async(req, res) => {
             throw new ApiError(400, "Title and description are required");
            }
 
-
-           console.log("Uploaded files:", req.files);
-
-           if(!req.files || !req.files.videoFile || !req.files.thumbnail) {
-            throw new ApiError(400, "video and thumbnail are required")
-           }
-
-           const videoFile = req.files.videoFile[0].path;
-        // req.files?.videoFile[0]?.path;
-           const thumbnailFile =  req.files.thumbnail[0].path;
-        //    req.files?.thumbnail[0]?.path;
-
+           if (!req.files.videoFile || !req.files.thumbnailFile) {
+            throw new ApiError(400, 'Both videoFile and thumbnailFile are required.');
+          }
+          
+          const videoFile = req.files.videoFile[0].path;
+          const thumbnailFile = req.files.thumbnailFile[0].path;
 
            const videoUploadResponse = await uploadOnCloudinary(videoFile);
            if(!videoUploadResponse?.url) {
@@ -84,13 +76,9 @@ const publishAVideo = asyncHandler(async(req, res) => {
             owner: userId,
            });
 
-           console.log(req.user);
            return res
-           .status(201)
-           .json(new ApiResponse(201, video, "video published successfully"));
-    } catch (error) {
-        throw new ApiError(500, error?.message || "Error while publishing video");
-    }
+           .status(200)
+           .json(new ApiResponse(200, video, "video published successfully"));
 })
 
 const getVideoById = asyncHandler(async (req, res) => {
