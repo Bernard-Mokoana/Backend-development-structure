@@ -4,7 +4,7 @@ import { ApiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import mongoose from "mongoose";
+import mongoose, { isValidObjectId } from "mongoose";
 
 
 const getAllVideos = asyncHandler(async (req, res) => {
@@ -82,12 +82,11 @@ const publishAVideo = asyncHandler(async(req, res) => {
 })
 
 const getVideoById = asyncHandler(async (req, res) => {
-   try {
     const { videoId } = req.params;
 
-    if(!mongoose.Types.ObjectId.isValid(videoId)) {
-        throw new ApiError(400, "Invalid video ID");
-    }
+   if(!videoId || !isValidObjectId(videoId)){
+    throw new ApiError(400, "Invalid video Id")
+   }
 
     const video = await Videos.findById(videoId);
 
@@ -98,9 +97,6 @@ const getVideoById = asyncHandler(async (req, res) => {
     return res
     .status(201)
     .json(new ApiResponse(200, video, "Video fetched successfully"))
-   } catch (error) {
-    throw new ApiError(500, error?.message || "Error while fetching video");
-   }
 })
 
 const updateVideo = asyncHandler(async (req, res) => {
@@ -147,7 +143,7 @@ const deleteVideo = asyncHandler( async(req, res) => {
         }
 
 
-        const video = await Videos.findOne({ _id: videoId, owner: req._user._id })
+        const video = await Videos.findOne({ _id: videoId, owner: req.user._id })
 
         if(!video) {
             throw new ApiError(404, "video not found or you are not athorized to delete the video")
